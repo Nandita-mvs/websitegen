@@ -43,4 +43,5 @@ class MemberForm(ModelForm):
     'work6',
     'photo',
     'resume']
+    
 
