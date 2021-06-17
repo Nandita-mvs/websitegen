@@ -34,10 +34,7 @@ def Portfolio(request):
      else:
         print(request.user)
         member=Member.objects.get(user=request.user)
-        #return render(request, 'profile.html', {'the_user': person,})
         error=""
-        #member=Member.objects.all()
-        #size=len(Member.objects.all())-1
         toemail=member.emailid
         
         if request.method == "POST":
@@ -52,3 +49,5 @@ def Portfolio(request):
 
         d={'member':member,'error':error}
         return render(request,"portfolio.html",d)
+
+
