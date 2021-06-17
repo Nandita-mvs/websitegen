@@ -1,35 +1,54 @@
 from django.shortcuts import render,redirect
+from django.shortcuts import HttpResponse
 from .models import *
 from django.contrib import messages
-from .forms import MemberForm
+from .forms import MemberForm,LoginForm
 from django.core.mail import send_mail
+from django.contrib.auth import authenticate,login,logout
+from django.shortcuts import get_object_or_404 
+from django.contrib.auth.models import User
+
+def intro(request):
+    return render(request,'account/intro.html')
 
 def Home(request):
+    if not request.user.is_authenticated:
+        return redirect('/accounts/login')
+    else:
+        print(request.user)
         form=MemberForm()
         error=""
         if request.method == "POST":
            form=MemberForm(request.POST,request.FILES) 
            if form.is_valid():
-               form.save()
+               member=form.save(commit=False)
+               member.user = request.user
+               member.save()
                error="no"
         context={'form':form,'error':error}
         return render(request,'home.html', context)
                 
 def Portfolio(request):
-    error=""
-    member=Member.objects.all()
-    size=len(Member.objects.all())-1
-    toemail=member[size].emailid
-    
-    if request.method == "POST":
-        fromemail=request.POST['email']
-        subject=request.POST['subject']
-        message=request.POST['message']
-        try:
-            send_mail(subject,message,fromemail,[toemail])
-            error="no"
-        except:
-            error="yes"
+     if not request.user.is_authenticated:
+        return redirect('accounts/login')
+     else:
+        print(request.user)
+        member=Member.objects.get(user=request.user)
+        #return render(request, 'profile.html', {'the_user': person,})
+        error=""
+        #member=Member.objects.all()
+        #size=len(Member.objects.all())-1
+        toemail=member.emailid
+        
+        if request.method == "POST":
+            fromemail=request.POST['email']
+            subject=request.POST['subject']
+            message=request.POST['message']
+            try:
+                send_mail(subject,message,fromemail,[toemail])
+                error="no"
+            except:
+                error="yes"
 
-    d={'member':member[size],'error':error}
-    return render(request,"portfolio.html",d)
+        d={'member':member,'error':error}
+        return render(request,"portfolio.html",d)

@@ -1,5 +1,6 @@
-{% extends 'header.html' %}
-{% block body %}
+{% extends "account/base.html" %}
+{% block content%}
+{% load bootstrap5 %}
 {% load crispy_forms_tags %}
 <style>
     body {
@@ -20,24 +21,19 @@
         color: red;
     }
 </style>
-<br>
-<div class="container">
-    <div class="jumbotron">
-      <h1>Portfolio Website Generator</h1>
-      <p>Just add your details and a beautiful portfolio website is generated.</p>
-    </div>
-</div>
 
 <div class="container mt-5">
     <div class="card">
-    <h5 class="card-header text-center mt-auto">Add Your Details</h5>
-    <div class="card-body">
-    <form action="" method="POST" enctype="multipart/form-data" target="_blank">
-        {% csrf_token %}
-        {{form|crispy}}
-        <input type="submit">
-    </form>
-</div>
+        <h5 class="card-header text-center mt-auto">Enter Details For Your Portfolio</h5>
+        <div class="card-body">
+            <form action="" method="POST" enctype="multipart/form-data" target="_blank">
+                {% csrf_token %}
+                {{form|crispy}}
+                <input type="submit">
+            </form>
+        </div>
+    </div>
+    <br>
 </div>
 
 
@@ -53,7 +49,4 @@
     alert("Something Went Wrong, Please Try Again!");
 </script>
 {% endifequal %}
-
-
-
 {% endblock %}

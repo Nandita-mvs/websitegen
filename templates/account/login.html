@@ -1,0 +1,79 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load static %}
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+<style>
+    .myButton {
+        box-shadow: 0px 0px 0px 0px #f0f7fa;
+        background:linear-gradient(to bottom, #4287f5 5%, #4287f5 100%);
+        background-color:#4287f5;
+        border:1px solid #236994;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:21px;
+        padding:11px;
+        text-decoration:none;
+        text-shadow:0px -1px 0px #5b6178;
+    }
+    .myButton:hover {
+        background:linear-gradient(to bottom, #4287f5 5%, #4287f5 100%);
+        background-color:#4287f5;
+    }
+    .myButton:active {
+        position:relative;
+        top:1px;
+    }
+
+</style>
+    <!--<div class="row text-center align-items-center mt-5 justify-content-center">-->
+        <div class="container mt-5 text-center align-items-center">
+        
+			<h2>Sign In</h2>
+	
+
+        {% get_providers as socialaccount_providers %}
+
+        {% if socialaccount_providers %}
+        <p>{% blocktrans with site.name as site_name %}Please sign in with one
+        of your existing google account. {% endblocktrans %}</p>
+
+        <div class="socialaccount_ballot">
+
+        <a class="myButton socialaccount_provider google" href="/accounts/google/login/?process=login"><img src="{% static 'images/google.png'%}">Sign In With Google</a>          
+            
+    
+        <div class="login-or">{% trans 'or' %}</div>
+
+        </div>
+
+        {% include "socialaccount/snippets/login_extra.html" %}
+
+        {% else %}
+        <p>{% blocktrans %}If you have not created an account yet, then please
+        <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+        {% endif %}
+        <div class="text-start">
+            <form class="login" method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">{% trans "Sign In" %}</button>
+            {% endbuttons %}
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

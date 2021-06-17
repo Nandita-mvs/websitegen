@@ -2,9 +2,11 @@ from django.db import models
 from django.db.models import CharField
 from django.db.models import IntegerField, Model
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.conf import settings
 
 # Create your models here.
 class Member(models.Model):
+    user=models.OneToOneField(settings.AUTH_USER_MODEL,null=True,on_delete=models.SET_NULL)
     firstname = models.CharField(max_length=100,verbose_name="First Name",default='',)
     lastname = models.CharField(max_length=100,verbose_name="Last Name",default='') 
 
